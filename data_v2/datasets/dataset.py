@@ -258,9 +258,19 @@ class ImageDataset(Dataset):
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
         k = 2
         _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-        mask = labels.reshape(image.shape[0], image.shape[1])
+        labels = labels.reshape(image.shape[0], image.shape[1])
 
-        return img, pid, camid, img_path, mask
+        num_parts = k
+        parts = []
+        for i in range(num_parts):
+            masked_image = np.copy(image)
+            masked_image = masked_image.reshape((-1, 3))
+            cluster = i
+            masked_image[labels != cluster] = [0, 0, 0]
+            masked_image = masked_image.reshape(image.shape)
+            parts.append(masked_image)
+
+        return img, pid, camid, img_path, parts
         # return img, pid
 
 

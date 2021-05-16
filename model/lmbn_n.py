@@ -37,6 +37,8 @@ class LMBN_n(nn.Module):
             conv3), copy.deepcopy(osnet.conv4), copy.deepcopy(osnet.conv5))
 
         self.global_pooling = nn.AdaptiveMaxPool2d((1, 1))
+        self.partial_pooling0 = nn.AdaptiveAvgPool2d((1, 1))
+        self.partial_pooling1 = nn.AdaptiveAvgPool2d((1, 1))
         self.partial_pooling = nn.AdaptiveAvgPool2d((2, 1))
         self.channel_pooling = nn.AdaptiveAvgPool2d((1, 1))
 
@@ -68,21 +70,19 @@ class LMBN_n(nn.Module):
 
         self.activation_map = args.activation_map
 
-    def forward(self, x, masks=None):
+    def forward(self, x, parts=None):
         # if self.batch_drop_block is not None:
         #     x = self.batch_drop_block(x)
 
-        x1 = x.clone
-        x2 = x.clone
-        x1[masks != 0] = [0, 0, 0]
-        x2[masks != 1] = [0, 0, 0]
-        print("hihihihi:", x == x1 + x2)
-
         x = self.backone(x)
+        x0 = self.backone(parts[0])
+        x1 = self.backone(parts[1])
 
 
         glo = self.global_branch(x)
         par = self.partial_branch(x)
+        par0 = self.partial_branch(x0)
+        par1 = self.partial_branch(x1)
         cha = self.channel_branch(x)
 
         if self.activation_map:
@@ -106,11 +106,13 @@ class LMBN_n(nn.Module):
         glo_drop = self.global_pooling(glo_drop)
         glo = self.channel_pooling(glo)  # shape:(batchsize, 512,1,1)
         g_par = self.global_pooling(par)  # shape:(batchsize, 512,1,1)
-        p_par = self.partial_pooling(par)  # shape:(batchsize, 512,2,1)
+        # p_par = self.partial_pooling(par)  # shape:(batchsize, 512,2,1)
+        p0 = self.partial_pooling0(par0)
+        p1 = self.partial_pooling0(par1)
         cha = self.channel_pooling(cha)  # shape:(batchsize, 256,1,1)
 
-        p0 = p_par[:, :, 0:1, :]
-        p1 = p_par[:, :, 1:2, :]
+        # p0 = p_par[:, :, 0:1, :]
+        # p1 = p_par[:, :, 1:2, :]
 
         f_glo = self.reduction_0(glo)
         f_p0 = self.reduction_1(g_par)

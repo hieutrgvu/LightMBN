@@ -41,15 +41,15 @@ class Engine():
         self.model.train()
 
         for batch, d in enumerate(self.train_loader):
-            inputs, labels, masks = self._parse_data_for_train(d)
+            inputs, labels, parts = self._parse_data_for_train(d)
 
-            print("hihi masks.shape:", masks.shape)
             inputs = inputs.to(self.device)
             labels = labels.to(self.device)
-            masks = masks.to(self.device)
+            for i in range(parts):
+                parts[i] = parts[i].to(self.device)
 
             self.optimizer.zero_grad()
-            outputs = self.model(inputs, masks)
+            outputs = self.model(inputs, parts)
             loss = self.loss.compute(outputs, labels)
 
             loss.backward()
@@ -166,8 +166,8 @@ class Engine():
     def _parse_data_for_train(self, data):
         imgs = data[0]
         pids = data[1]
-        masks = data[4]
-        return imgs, pids, masks
+        parts = data[4]
+        return imgs, pids, parts
 
     def _parse_data_for_eval(self, data):
         imgs = data[0]
