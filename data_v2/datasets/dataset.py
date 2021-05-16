@@ -247,20 +247,19 @@ class ImageDataset(Dataset):
     def __getitem__(self, index):
         img_path, pid, camid = self.data[index]
         img = read_image(img_path)
-        img_mask = img.copy()
         if self.transform is not None:
             img = self.transform(img)
 
-        image = 255 * img.numpy().transpose((1,2,0))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        pixel_values = image.reshape((-1, 3))
-        pixel_values = np.float32(pixel_values)
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
-        k = 2
-        _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-        mask = labels.reshape(image.shape[0], image.shape[1])
+        # image = 255 * img.numpy().transpose((1,2,0))
+        # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # pixel_values = image.reshape((-1, 3))
+        # pixel_values = np.float32(pixel_values)
+        # criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
+        # k = 2
+        # _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+        # mask = labels.reshape(image.shape[0], image.shape[1])
 
-        return img, pid, camid, img_path, mask
+        return img, pid, camid, img_path, np.arange(1)
         # return img, pid
 
 

@@ -43,7 +43,6 @@ class Engine():
         for batch, d in enumerate(self.train_loader):
             inputs, labels, masks = self._parse_data_for_train(d)
 
-            print("hihi masks.shape:", masks.shape)
             inputs = inputs.to(self.device)
             labels = labels.to(self.device)
             masks = masks.to(self.device)

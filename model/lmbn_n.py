@@ -8,6 +8,9 @@ from torch.nn import functional as F
 
 from torch.autograd import Variable
 
+import cv2
+import numpy as np
+
 
 class LMBN_n(nn.Module):
     def __init__(self, args):
@@ -37,6 +40,8 @@ class LMBN_n(nn.Module):
             conv3), copy.deepcopy(osnet.conv4), copy.deepcopy(osnet.conv5))
 
         self.global_pooling = nn.AdaptiveMaxPool2d((1, 1))
+        self.partial0_pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.partial1_pooling = nn.AdaptiveAvgPool2d((1, 1))
         self.partial_pooling = nn.AdaptiveAvgPool2d((2, 1))
         self.channel_pooling = nn.AdaptiveAvgPool2d((1, 1))
 
@@ -73,6 +78,16 @@ class LMBN_n(nn.Module):
         #     x = self.batch_drop_block(x)
 
         x = self.backone(x)
+
+        image = 255 * x.numpy().transpose((1,2,0))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        pixel_values = image.reshape((-1, 3))
+        pixel_values = np.float32(pixel_values)
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
+        k = 2
+        _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+        mask = labels.reshape(image.shape[0], image.shape[1])
+        cv2.imwrite("test_mask_cv.png", image)
 
         glo = self.global_branch(x)
         par = self.partial_branch(x)
