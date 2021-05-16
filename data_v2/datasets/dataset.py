@@ -245,7 +245,7 @@ class ImageDataset(Dataset):
     def __getitem__(self, index):
         img_path, pid, camid = self.data[index]
         img = read_image(img_path)
-        cv2.imwrite(img_path.split("/")[-1], img)
+        cv2.imwrite(img_path.split("/")[-1], img.numpy())
         # img_path_elements = img_path.split("/")
         # img_path_elements[-2] += "_mask"
         # img_path_elements[-1] = img_path_elements[-1][:-4] + ".mask"
