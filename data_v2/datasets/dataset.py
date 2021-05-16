@@ -258,7 +258,7 @@ class ImageDataset(Dataset):
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
         k = 2
         _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-        labels = labels.reshape(image.shape[0], image.shape[1])
+        # labels = labels.reshape(image.shape[0], image.shape[1])
 
         num_parts = k
         parts = []
