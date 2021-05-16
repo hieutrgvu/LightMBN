@@ -256,7 +256,7 @@ class ImageDataset(Dataset):
 
         torchvision.utils.save_image(img_mask, img_path.split("/")[-1][:-4] + "_mask.png")
         torchvision.utils.save_image(img, img_path.split("/")[-1][:-4] + "_transform.png")
-        cv2.imwrite(img, img_path.split("/")[-1][:-4] + "_transform_cv.png", img.numpy().transpose((1,2,0)))
+        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv.png", img.numpy().transpose((1,2,0)))
 
         return img, pid, camid, img_path, np.arange(1, 2)
         # return img, pid
