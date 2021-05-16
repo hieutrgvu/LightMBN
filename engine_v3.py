@@ -49,7 +49,7 @@ class Engine():
                 parts[i] = parts[i].to(self.device)
 
             self.optimizer.zero_grad()
-            outputs = self.model(inputs, parts)
+            outputs = self.model(inputs, parts=parts)
             loss = self.loss.compute(outputs, labels)
 
             loss.backward()
