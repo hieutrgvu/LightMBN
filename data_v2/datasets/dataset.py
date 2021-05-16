@@ -246,37 +246,12 @@ class ImageDataset(Dataset):
     def __getitem__(self, index):
         img_path, pid, camid = self.data[index]
         img = read_image(img_path)
-        # img_path_elements = img_path.split("/")
-        # img_path_elements[-2] += "_mask"
-        # img_path_elements[-1] = img_path_elements[-1][:-4] + ".mask"
-        # mask_path = "/".join(img_path_elements)
-        # mask = np.fromfile(mask_path, dtype=int)
+        img_mask = img.copy()
         if self.transform is not None:
             img = self.transform(img)
 
-        print("hieu: img.type:", type(img))
-        print("hieu: img.shape:", img.shape)
-
-        # img = torchvision.utils.make_grid(img)
-        print("hieu: image.type:", type(img))
-        print("hieu: image.shape:", img.shape)
-        torchvision.utils.save_image(img, img_path.split("/")[-1])
-        # cv2.imwrite(img_path.split("/")[-1], inp)
-        # convert to RGB
-        # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        # cv2.imwrite(img_path.split("/")[-1], image)
-        # reshape the image to a 2D array of pixels and 3 color values (RGB)
-        pixel_values = inp.reshape((-1, 3))
-        # convert to float
-        pixel_values = np.float32(pixel_values)
-
-        # define stopping criteria
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
-
-        # number of clusters (K)
-        k = 2
-        _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-        mask = labels.reshape(image.shape[0], image.shape[1])
+        img_mask.save("test_mask.png")
+        torchvision.utils.save_image(img, "test_transform.png")
 
         print("hieu: mask: ", mask.shape)
         return img, pid, camid, img_path, mask
