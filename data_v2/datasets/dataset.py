@@ -250,11 +250,10 @@ class ImageDataset(Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        img_mask.save("test_mask.png")
-        torchvision.utils.save_image(img, "test_transform.png")
+        img_mask.save(img_path.split("/")[-1][:-4] + "_mask.png")
+        torchvision.utils.save_image(img, img_path.split("/")[-1][:-4] + "_transform.png")
 
-        print("hieu: mask: ", mask.shape)
-        return img, pid, camid, img_path, mask
+        return img, pid, camid, img_path, np.arange(1, 2)
         # return img, pid
 
 
