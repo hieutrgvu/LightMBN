@@ -254,8 +254,13 @@ class ImageDataset(Dataset):
             img = self.transform(img)
 
         print("hieu: img.type:", type(img))
+        print("hieu: img.shape:", img.shape)
+
+        image = img.numpy()
+        print("hieu: image.type:", type(image))
+        print("hieu: image.shape:", image.shape)
         # convert to RGB
-        image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         # reshape the image to a 2D array of pixels and 3 color values (RGB)
         pixel_values = image.reshape((-1, 3))
