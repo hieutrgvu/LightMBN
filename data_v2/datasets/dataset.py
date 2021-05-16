@@ -256,9 +256,30 @@ class ImageDataset(Dataset):
 
         torchvision.utils.save_image(img_mask, img_path.split("/")[-1][:-4] + "_mask.png")
         torchvision.utils.save_image(img, img_path.split("/")[-1][:-4] + "_transform.png")
-        cv_image = 255 * img.numpy().transpose((1,2,0))
-        cv_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
-        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv.png", cv_image)
+        image = 255 * img.numpy().transpose((1,2,0))
+
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        # reshape the image to a 2D array of pixels and 3 color values (RGB)
+        pixel_values = image.reshape((-1, 3))
+        # convert to float
+        pixel_values = np.float32(pixel_values)
+
+        # define stopping criteria
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
+
+        # number of clusters (K)
+        k = 6
+        _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+        labels = labels.reshape(image.shape[0], image.shape[1])
+
+
+        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv.png", image)
+        centers = np.uint8(centers)
+        labels = labels.flatten()
+        segmented_image = centers[labels.flatten()]
+        segmented_image = segmented_image.reshape(image.shape)
+        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv_segment.png", segmented_image)
 
         return img, pid, camid, img_path, np.arange(1, 2)
         # return img, pid
