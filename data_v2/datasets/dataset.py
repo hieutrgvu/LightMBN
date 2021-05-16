@@ -259,8 +259,6 @@ class ImageDataset(Dataset):
         k = 2
         _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
         mask = labels.reshape(image.shape[0], image.shape[1])
-        print("hieu mask.shape", mask.shape)
-        print(mask)
 
         return img, pid, camid, img_path, mask
         # return img, pid
