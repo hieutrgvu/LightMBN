@@ -257,15 +257,11 @@ class ImageDataset(Dataset):
         print("hieu: img.type:", type(img))
         print("hieu: img.shape:", img.shape)
 
-        img_grid = torchvision.utils.make_grid(img)
-        inp = img_grid.numpy().transpose((1, 2, 0))
-        mean = np.array([0.485, 0.456, 0.406])
-        std = np.array([0.229, 0.224, 0.225])
-        inp = std * inp + mean
-        inp = np.clip(inp, 0, 1)
-        print("hieu: image.type:", type(inp))
-        print("hieu: image.shape:", inp.shape)
-        cv2.imwrite(img_path.split("/")[-1], inp)
+        # img = torchvision.utils.make_grid(img)
+        print("hieu: image.type:", type(img))
+        print("hieu: image.shape:", img.shape)
+        torchvision.utils.save_image(img, img_path.split("/")[-1])
+        # cv2.imwrite(img_path.split("/")[-1], inp)
         # convert to RGB
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # cv2.imwrite(img_path.split("/")[-1], image)
