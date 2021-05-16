@@ -262,7 +262,7 @@ class ImageDataset(Dataset):
         # convert to RGB
         image = np.transpose(image, (1, 2, 0))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        cv2.imshow('ImageWindow', image)
+        cv2.imwrite(img_path.split("/")[-1], image)
         # reshape the image to a 2D array of pixels and 3 color values (RGB)
         pixel_values = image.reshape((-1, 3))
         # convert to float
