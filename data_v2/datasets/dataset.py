@@ -268,8 +268,8 @@ class ImageDataset(Dataset):
             masked_image = masked_image.reshape((-1, 3))
             cluster = i
             masked_image[labels != cluster] = [0, 0, 0]
-            masked_image = masked_image.reshape(image.shape)
-            parts.append(masked_image)
+            masked_image = masked_image.reshape(image.shape).transpose((2, 0, 1))
+            parts.append(torch.from_numpy(masked_image))
 
         return img, pid, camid, img_path, parts
         # return img, pid
