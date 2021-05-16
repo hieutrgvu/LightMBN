@@ -252,7 +252,7 @@ class ImageDataset(Dataset):
         if self.transform is not None:
             img = self.transform(img)
         print("hieu: mask: ", mask.shape)
-        return img, pid, camid, img_path, mask
+        return img, pid, camid, img_path, np.arange(1, 2)
         # return img, pid
 
 
