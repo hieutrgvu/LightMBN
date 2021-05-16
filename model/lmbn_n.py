@@ -75,7 +75,7 @@ class LMBN_n(nn.Module):
         #     x = self.batch_drop_block(x)
 
         x = self.backone(x)
-        print(len(parts))
+        print("hieuhi:", len(parts))
         x0 = self.backone(parts[0])
         x1 = self.backone(parts[1])
 
