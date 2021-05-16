@@ -51,6 +51,7 @@ n = start + 1
 while not engine.terminate():
 
     n += 1
+    print("main before train")
     engine.train()
     if args.test_every != 0 and n % args.test_every == 0:
         engine.test()
