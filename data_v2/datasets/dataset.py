@@ -35,11 +35,12 @@ class Dataset(object):
     _junk_pids = [] # contains useless person IDs, e.g. background, false detections
 
     def __init__(self, train, query, gallery, transform=None, mode='train',
-                 combineall=False, verbose=True, **kwargs):
+                 combineall=False, verbose=True, mtransform=None, **kwargs):
         self.train = train
         self.query = query
         self.gallery = gallery
         self.transform = transform
+        self.mtransform = mtransform
         self.mode = mode
         self.combineall = combineall
         self.verbose = verbose
@@ -250,6 +251,9 @@ class ImageDataset(Dataset):
         if self.transform is not None:
             print("hieu transform:", self.transform)
             img = self.transform(img)
+
+        if self.mtransform is not None:
+            print("hieu mtransform:", self.mtransform)
 
         img_mask.save(img_path.split("/")[-1][:-4] + "_mask.png")
         torchvision.utils.save_image(img, img_path.split("/")[-1][:-4] + "_transform.png")

@@ -279,18 +279,23 @@ def build_transforms(height, width, transforms='random_flip', norm_mean=[0.485, 
 
     print('Building train transforms ...')
     transform_tr = []
+    transform_mtr = []
     transform_tr += [Resize((height, width))]
+    transform_mtr += [Resize((height, width))]
     print('+ resize to {}x{}'.format(height, width))
     if 'random_flip' in transforms:
         print('+ random flip')
         transform_tr += [RandomHorizontalFlip()]
+        transform_mtr += [RandomHorizontalFlip()]
     if 'random_crop' in transforms:
         print('+ random crop (enlarge to {}x{} and '
               'crop {}x{})'.format(int(round(height * 1.05)), int(round(width * 1.05)), height, width))
         transform_tr += [Random2DTranslation(height, width)]
+        transform_mtr += [Random2DTranslation(height, width)]
     if 'random_patch' in transforms:
         print('+ random patch')
         transform_tr += [RandomPatch()]
+        transform_mtr += [RandomPatch()]
 
     if 'color_jitter' in transforms:
         print('+ color jitter')
@@ -298,15 +303,19 @@ def build_transforms(height, width, transforms='random_flip', norm_mean=[0.485, 
                                      contrast=0.15, saturation=0, hue=0)]
     print('+ to torch tensor of range [0, 1]')
     transform_tr += [ToTensor()]
+    transform_mtr += [ToTensor()]
     print('+ normalization (mean={}, std={})'.format(norm_mean, norm_std))
     transform_tr += [normalize]
     if 'random_erase' in transforms:
         print('+ random erase')
         transform_tr += [RandomErasing()]
+        transform_mtr += [RandomErasing()]
     if 'cutout' in transforms:
         print('+ cutout augmentation')
         transform_tr += [Cutout()]
+        transform_mtr += [Cutout()]
     transform_tr = Compose(transform_tr)
+    transform_mtr = Compose(transform_mtr)
 
     print('Building test transforms ...')
     print('+ resize to {}x{}'.format(height, width))
@@ -318,4 +327,4 @@ def build_transforms(height, width, transforms='random_flip', norm_mean=[0.485, 
         normalize,
     ])
 
-    return transform_tr, transform_te
+    return transform_tr, transform_te, transform_mtr

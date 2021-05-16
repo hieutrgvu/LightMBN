@@ -55,7 +55,7 @@ class DataManager(object):
         if isinstance(self.targets, str):
             self.targets = [self.targets]
 
-        self.transform_tr, self.transform_te = build_transforms(
+        self.transform_tr, self.transform_te, self.transform_mtr = build_transforms(
             self.height, self.width, transforms=transforms,
             norm_mean=norm_mean, norm_std=norm_std
         )
@@ -179,7 +179,8 @@ class ImageDataManager(DataManager):
                 split_id=split_id,
                 cuhk03_labeled=cuhk03_labeled,
                 cuhk03_classic_split=cuhk03_classic_split,
-                market1501_500k=market1501_500k
+                market1501_500k=market1501_500k,
+                mtransform=self.transform_mtr,
             )
             trainset.append(trainset_)
             print("trainset_:", trainset_)
