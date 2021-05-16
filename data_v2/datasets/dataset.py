@@ -251,44 +251,18 @@ class ImageDataset(Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        if self.mtransform is not None:
-            img_mask = self.mtransform(img_mask)
-
-        torchvision.utils.save_image(img_mask, img_path.split("/")[-1][:-4] + "_mask.png")
-        torchvision.utils.save_image(img, img_path.split("/")[-1][:-4] + "_transform.png")
         image = 255 * img.numpy().transpose((1,2,0))
-
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         pixel_values = image.reshape((-1, 3))
         pixel_values = np.float32(pixel_values)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
         k = 2
         _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-        labels = labels.reshape(image.shape[0], image.shape[1])
+        mask = labels.reshape(image.shape[0], image.shape[1])
+        print("hieu mask.shape", mask.shape)
+        print(mask)
 
-        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv.png", image)
-        centers = np.uint8(centers)
-        labels = labels.flatten()
-        segmented_image = centers[labels.flatten()]
-        segmented_image = segmented_image.reshape(image.shape)
-        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv_segment.png", segmented_image)
-
-        image = cv2.cvtColor(255 * img_mask.numpy().transpose((1,2,0)), cv2.COLOR_BGR2RGB)
-        pixel_values = image.reshape((-1, 3))
-        pixel_values = np.float32(pixel_values)
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
-        k = 2
-        _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
-        labels = labels.reshape(image.shape[0], image.shape[1])
-
-        cv2.imwrite(img_path.split("/")[-1][:-4] + "_mask_cv.png", image)
-        centers = np.uint8(centers)
-        labels = labels.flatten()
-        segmented_image = centers[labels.flatten()]
-        segmented_image = segmented_image.reshape(image.shape)
-        cv2.imwrite(img_path.split("/")[-1][:-4] + "_mask_cv_segment.png", segmented_image)
-
-        return img, pid, camid, img_path, np.arange(1, 2)
+        return img, pid, camid, img_path, mask
         # return img, pid
 
 
