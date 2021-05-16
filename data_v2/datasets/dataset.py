@@ -260,8 +260,9 @@ class ImageDataset(Dataset):
         print("hieu: image.type:", type(image))
         print("hieu: image.shape:", image.shape)
         # convert to RGB
+        image = np.transpose(image, (1, 2, 0))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
+        cv2.imshow(image)
         # reshape the image to a 2D array of pixels and 3 color values (RGB)
         pixel_values = image.reshape((-1, 3))
         # convert to float
