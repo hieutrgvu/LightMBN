@@ -45,12 +45,12 @@ class Engine():
 
             inputs = inputs.to(self.device)
             labels = labels.to(self.device)
-            for i in range(parts):
+            for i in range(len(parts)):
                 parts[i] = parts[i].to(self.device)
 
             self.optimizer.zero_grad()
             print("engin parts:", len(parts))
-            outputs = self.model(inputs, parts=parts)
+            # outputs = self.model(inputs, parts=parts)
             loss = self.loss.compute(outputs, labels)
 
             loss.backward()
