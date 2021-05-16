@@ -249,13 +249,12 @@ class ImageDataset(Dataset):
         img = read_image(img_path)
         img_mask = img.copy()
         if self.transform is not None:
-            print("hieu transform:", self.transform)
             img = self.transform(img)
 
         if self.mtransform is not None:
-            print("hieu mtransform:", self.mtransform)
+            img_mask = self.mtransform(img_mask)
 
-        img_mask.save(img_path.split("/")[-1][:-4] + "_mask.png")
+        torchvision.utils.save_image(img_mask, img_path.split("/")[-1][:-4] + "_mask.png")
         torchvision.utils.save_image(img, img_path.split("/")[-1][:-4] + "_transform.png")
 
         return img, pid, camid, img_path, np.arange(1, 2)
