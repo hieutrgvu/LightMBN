@@ -6,7 +6,6 @@ from utils.re_ranking import re_ranking, re_ranking_gpu
 
 class Engine():
     def __init__(self, args, model, optimizer, scheduler, loss, loader, ckpt):
-        print("main before train")
         self.args = args
         self.train_loader = loader.train_loader
         self.test_loader = loader.test_loader
@@ -29,8 +28,6 @@ class Engine():
         self.ckpt.write_log(
             '[INFO] Starting from epoch {}'.format(self.scheduler.last_epoch + 1))
 
-        print("main before train2")
-
     def train(self):
         epoch = self.scheduler.last_epoch
         lr = self.scheduler.get_last_lr()[0]
@@ -52,7 +49,7 @@ class Engine():
 
             self.optimizer.zero_grad()
             print("engin parts:", len(parts))
-            # outputs = self.model(inputs, parts=parts)
+            outputs = self.model(inputs, parts=parts)
             loss = self.loss.compute(outputs, labels)
 
             loss.backward()
@@ -127,9 +124,11 @@ class Engine():
         pids, camids = [], []
 
         for d in loader:
-            inputs, pid, camid = self._parse_data_for_eval(d)
+            inputs, pid, camid, parts = self._parse_data_for_eval(d)
             input_img = inputs.to(self.device)
-            outputs = self.model(input_img)
+            for i in range(len(parts)):
+                parts[i] = parts[i].to(self.device)
+            outputs = self.model(input_img, parts=parts)
 
             f1 = outputs.data.cpu()
             # flip
@@ -176,7 +175,8 @@ class Engine():
         imgs = data[0]
         pids = data[1]
         camids = data[2]
-        return imgs, pids, camids
+        parts = data[4]
+        return imgs, pids, camids, parts
 
     def _save_checkpoint(self, epoch, rank1, save_dir, is_best=False):
         self.ckpt.save_checkpoint(

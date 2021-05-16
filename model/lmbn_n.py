@@ -76,11 +76,11 @@ class LMBN_n(nn.Module):
 
         x = self.backone(x)
         if parts is None:
-            print("fuckkkk")
-            return 1,1,1,1,1
-        print("hieuhi:", len(parts))
-        x0 = self.backone(parts[0])
-        x1 = self.backone(parts[1])
+            x0 = x
+            x1 = x
+        else:
+            x0 = self.backone(parts[0])
+            x1 = self.backone(parts[1])
 
 
         glo = self.global_branch(x)
