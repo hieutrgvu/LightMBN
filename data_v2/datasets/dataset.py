@@ -14,6 +14,7 @@ import torch
 
 from ..utils import read_image, mkdir_if_missing, download_url
 
+import cv2
 
 class Dataset(object):
     """An abstract class representing a Dataset.
@@ -251,9 +252,25 @@ class ImageDataset(Dataset):
         mask = np.fromfile(mask_path, dtype=int)
         if self.transform is not None:
             img = self.transform(img)
-        print("hieu: img.shape:", img.shape)
-        # print("hieu: mask: ", mask.shape)
-        return img, pid, camid, img_path, np.arange(1, 2)
+
+            # convert to RGB
+        image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        # reshape the image to a 2D array of pixels and 3 color values (RGB)
+        pixel_values = image.reshape((-1, 3))
+        # convert to float
+        pixel_values = np.float32(pixel_values)
+
+        # define stopping criteria
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
+
+        # number of clusters (K)
+        k = 2
+        _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+        mask = labels.reshape(image.shape[0], image.shape[1])
+
+        print("hieu: mask: ", mask.shape)
+        return img, pid, camid, img_path, mask
         # return img, pid
 
 
