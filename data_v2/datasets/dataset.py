@@ -248,6 +248,7 @@ class ImageDataset(Dataset):
         img = read_image(img_path)
         img_mask = img.copy()
         if self.transform is not None:
+            print("hieu transform:", self.transform)
             img = self.transform(img)
 
         img_mask.save(img_path.split("/")[-1][:-4] + "_mask.png")
