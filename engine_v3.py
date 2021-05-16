@@ -6,6 +6,7 @@ from utils.re_ranking import re_ranking, re_ranking_gpu
 
 class Engine():
     def __init__(self, args, model, optimizer, scheduler, loss, loader, ckpt):
+        print("main before train")
         self.args = args
         self.train_loader = loader.train_loader
         self.test_loader = loader.test_loader
@@ -27,6 +28,8 @@ class Engine():
 
         self.ckpt.write_log(
             '[INFO] Starting from epoch {}'.format(self.scheduler.last_epoch + 1))
+
+        print("main before train2")
 
     def train(self):
         epoch = self.scheduler.last_epoch
