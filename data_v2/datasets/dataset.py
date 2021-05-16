@@ -15,6 +15,7 @@ import torch
 from ..utils import read_image, mkdir_if_missing, download_url
 
 import cv2
+import torchvision
 
 class Dataset(object):
     """An abstract class representing a Dataset.
@@ -245,8 +246,6 @@ class ImageDataset(Dataset):
     def __getitem__(self, index):
         img_path, pid, camid = self.data[index]
         img = read_image(img_path)
-        print("hieu: type img:", type(img))
-        cv2.imwrite(img_path.split("/")[-1], img.numpy())
         # img_path_elements = img_path.split("/")
         # img_path_elements[-2] += "_mask"
         # img_path_elements[-1] = img_path_elements[-1][:-4] + ".mask"
@@ -258,11 +257,12 @@ class ImageDataset(Dataset):
         print("hieu: img.type:", type(img))
         print("hieu: img.shape:", img.shape)
 
-        image = img.numpy()
+        img_grid = torchvision.utils.make_grid(img)
+        image = img_grid.numpy().transpose((1, 2, 0))
         print("hieu: image.type:", type(image))
         print("hieu: image.shape:", image.shape)
+        cv2.imwrite(img_path.split("/")[-1], image)
         # convert to RGB
-        image = np.transpose(image, (1, 2, 0))
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # cv2.imwrite(img_path.split("/")[-1], image)
         # reshape the image to a 2D array of pixels and 3 color values (RGB)
