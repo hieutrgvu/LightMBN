@@ -253,7 +253,8 @@ class ImageDataset(Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-            # convert to RGB
+        print("hieu: img.type:", type(img))
+        # convert to RGB
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # reshape the image to a 2D array of pixels and 3 color values (RGB)
