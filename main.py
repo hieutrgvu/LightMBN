@@ -43,15 +43,17 @@ scheduler = make_scheduler(args, optimzer, start)
 ckpt.write_log('[INFO] Model parameters: {com[0]} flops: {com[1]}'.format(com=compute_model_complexity(model, (1, 3, args.height, args.width))
                                                                           ))
 
+print("main before train")
 engine = engine_v3.Engine(args, model, optimzer,
                           scheduler, loss, loader, ckpt)
+
+print("main before train2")
 # engine = engine.Engine(args, model, loss, loader, ckpt)
 
 n = start + 1
 while not engine.terminate():
 
     n += 1
-    print("main before train")
     engine.train()
     if args.test_every != 0 and n % args.test_every == 0:
         engine.test()
