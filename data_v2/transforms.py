@@ -261,6 +261,7 @@ def build_transforms(height, width, transforms='random_flip', norm_mean=[0.485, 
     if transforms is None:
         transforms = []
 
+    print("transform:", transforms)
     if isinstance(transforms, str):
         transforms = [transforms]
 
