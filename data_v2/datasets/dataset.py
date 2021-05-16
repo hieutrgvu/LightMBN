@@ -258,15 +258,19 @@ class ImageDataset(Dataset):
         print("hieu: img.shape:", img.shape)
 
         img_grid = torchvision.utils.make_grid(img)
-        image = img_grid.numpy().transpose((1, 2, 0))
-        print("hieu: image.type:", type(image))
-        print("hieu: image.shape:", image.shape)
-        cv2.imwrite(img_path.split("/")[-1], image)
+        inp = img_grid.numpy().transpose((1, 2, 0))
+        mean = np.array([0.485, 0.456, 0.406])
+        std = np.array([0.229, 0.224, 0.225])
+        inp = std * inp + mean
+        inp = np.clip(inp, 0, 1)
+        print("hieu: image.type:", type(inp))
+        print("hieu: image.shape:", inp.shape)
+        cv2.imwrite(img_path.split("/")[-1], inp)
         # convert to RGB
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # cv2.imwrite(img_path.split("/")[-1], image)
         # reshape the image to a 2D array of pixels and 3 color values (RGB)
-        pixel_values = image.reshape((-1, 3))
+        pixel_values = inp.reshape((-1, 3))
         # convert to float
         pixel_values = np.float32(pixel_values)
 
