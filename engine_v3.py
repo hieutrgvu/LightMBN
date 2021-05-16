@@ -29,7 +29,7 @@ class Engine():
             '[INFO] Starting from epoch {}'.format(self.scheduler.last_epoch + 1))
 
     def train(self):
-
+        print("Hieu Trigger train")
         epoch = self.scheduler.last_epoch
         lr = self.scheduler.get_last_lr()[0]
 
