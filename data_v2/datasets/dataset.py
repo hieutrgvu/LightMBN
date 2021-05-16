@@ -251,6 +251,7 @@ class ImageDataset(Dataset):
         mask = np.fromfile(mask_path, dtype=int)
         if self.transform is not None:
             img = self.transform(img)
+        print("hieu: mask: ", mask.shape)
         return img, pid, camid, img_path, mask
         # return img, pid
 
