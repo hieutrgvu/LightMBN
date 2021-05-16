@@ -135,7 +135,11 @@ class Engine():
             inputs = inputs.index_select(
                 3, torch.arange(inputs.size(3) - 1, -1, -1))
             input_img = inputs.to(self.device)
-            outputs = self.model(input_img)
+            for i in range(len(parts)):
+                parts[i] = parts[i].index_select(
+                    3, torch.arange(parts[i].size(3) - 1, -1, -1))
+                parts[i] = parts[i].to(self.device)
+            outputs = self.model(input_img, parts=parts)
             f2 = outputs.data.cpu()
 
             ff = f1 + f2
