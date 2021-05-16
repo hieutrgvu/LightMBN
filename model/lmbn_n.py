@@ -68,7 +68,7 @@ class LMBN_n(nn.Module):
 
         self.activation_map = args.activation_map
 
-    def forward(self, x):
+    def forward(self, x, masks=None):
         # if self.batch_drop_block is not None:
         #     x = self.batch_drop_block(x)
 
@@ -77,6 +77,9 @@ class LMBN_n(nn.Module):
         glo = self.global_branch(x)
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
+
+        if masks != None:
+            print("hihihi type(masks):", type(masks))
 
         if self.activation_map:
             glo_ = glo
