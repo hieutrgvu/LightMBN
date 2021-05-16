@@ -256,7 +256,9 @@ class ImageDataset(Dataset):
 
         torchvision.utils.save_image(img_mask, img_path.split("/")[-1][:-4] + "_mask.png")
         torchvision.utils.save_image(img, img_path.split("/")[-1][:-4] + "_transform.png")
-        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv.png", cv2.convertScaleAbs(img.numpy().transpose((1,2,0)), alpha=(255.0)))
+        cv_image = 255 * img.numpy().transpose((1,2,0))
+        cv_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
+        cv2.imwrite(img_path.split("/")[-1][:-4] + "_transform_cv.png", cv_image)
 
         return img, pid, camid, img_path, np.arange(1, 2)
         # return img, pid
