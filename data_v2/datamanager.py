@@ -161,12 +161,15 @@ class ImageDataManager(DataManager):
         if args.sampler:
             train_sampler = 'RandomIdentitySampler'
 
+        print("args:", args)
         super(ImageDataManager, self).__init__(sources=sources, targets=targets, height=height, width=width,
                                                transforms=transforms, norm_mean=norm_mean, norm_std=norm_std,
                                                use_gpu=use_gpu)
         print('=> Loading train (source) dataset')
         trainset = []
         for name in self.sources:
+            print("name:", name)
+            print("root:", root)
             trainset_ = init_image_dataset(
                 name,
                 transform=self.transform_tr,
