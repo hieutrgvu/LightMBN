@@ -72,14 +72,18 @@ class LMBN_n(nn.Module):
         # if self.batch_drop_block is not None:
         #     x = self.batch_drop_block(x)
 
+        x1 = x.clone
+        x2 = x.clone
+        x1[masks != 0] = [0, 0, 0]
+        x2[masks != 1] = [0, 0, 0]
+        print("hihihihi:", x == x1 + x2)
+
         x = self.backone(x)
+
 
         glo = self.global_branch(x)
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
-
-        if masks != None:
-            print("hihihi type(masks):", type(masks))
 
         if self.activation_map:
             glo_ = glo
