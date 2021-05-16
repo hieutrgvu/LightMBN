@@ -247,7 +247,6 @@ class ImageDataset(Dataset):
     def __getitem__(self, index):
         img_path, pid, camid = self.data[index]
         img = read_image(img_path)
-        img_mask = img.copy()
         if self.transform is not None:
             img = self.transform(img)
 

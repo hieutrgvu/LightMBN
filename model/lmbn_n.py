@@ -25,12 +25,22 @@ class LMBN_n(nn.Module):
             osnet.conv3[0]
         )
 
+        self.backone_p = nn.Sequential(
+            copy.deepcopy(osnet.conv1),
+            copy.deepcopy(osnet.maxpool),
+            copy.deepcopy(osnet.conv2),
+            copy.deepcopy(osnet.conv3[0])
+        )
+
         conv3 = osnet.conv3[1:]
 
         self.global_branch = nn.Sequential(copy.deepcopy(
             conv3), copy.deepcopy(osnet.conv4), copy.deepcopy(osnet.conv5))
 
         self.partial_branch = nn.Sequential(copy.deepcopy(
+            conv3), copy.deepcopy(osnet.conv4), copy.deepcopy(osnet.conv5))
+
+        self.partial_branch_p = nn.Sequential(copy.deepcopy(
             conv3), copy.deepcopy(osnet.conv4), copy.deepcopy(osnet.conv5))
 
         self.channel_branch = nn.Sequential(copy.deepcopy(
@@ -79,14 +89,14 @@ class LMBN_n(nn.Module):
             x0 = x
             x1 = x
         else:
-            x0 = self.backone(parts[0])
-            x1 = self.backone(parts[1])
+            x0 = self.backone_p(parts[0])
+            x1 = self.backone_p(parts[1])
 
 
         glo = self.global_branch(x)
         par = self.partial_branch(x)
-        par0 = self.partial_branch(x0)
-        par1 = self.partial_branch(x1)
+        par0 = self.partial_branch_p(x0)
+        par1 = self.partial_branch_p(x1)
         cha = self.channel_branch(x)
 
         if self.activation_map:
@@ -112,7 +122,7 @@ class LMBN_n(nn.Module):
         g_par = self.global_pooling(par)  # shape:(batchsize, 512,1,1)
         # p_par = self.partial_pooling(par)  # shape:(batchsize, 512,2,1)
         p0 = self.partial_pooling0(par0)
-        p1 = self.partial_pooling0(par1)
+        p1 = self.partial_pooling1(par1)
         cha = self.channel_pooling(cha)  # shape:(batchsize, 256,1,1)
 
         # p0 = p_par[:, :, 0:1, :]
