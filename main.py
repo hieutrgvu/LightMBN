@@ -22,7 +22,6 @@ if args.config != '':
         setattr(args, op, config[op])
 torch.backends.cudnn.benchmark = True
 
-print("main before train")
 # loader = data.Data(args)
 ckpt = utility.checkpoint(args)
 loader = data_v2.ImageDataManager(args)
@@ -30,7 +29,7 @@ model = make_model(args, ckpt)
 optimzer = make_optimizer(args, model)
 loss = make_loss(args, ckpt) if not args.test_only else None
 
-print("main before train2")
+print("main before train")
 start = -1
 if args.load != '':
     start, model, optimizer = ckpt.resume_from_checkpoint(
@@ -39,8 +38,10 @@ if args.load != '':
 if args.pre_train != '':
     ckpt.load_pretrained_weights(model, args.pre_train)
 
+    print("main before train1")
 scheduler = make_scheduler(args, optimzer, start)
 
+print("main before train2")
 # print('[INFO] System infomation: \n {}'.format(get_pretty_env_info()))
 ckpt.write_log('[INFO] Model parameters: {com[0]} flops: {com[1]}'.format(com=compute_model_complexity(model, (1, 3, args.height, args.width))
                                                                           ))
