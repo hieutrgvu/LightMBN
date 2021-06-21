@@ -82,11 +82,11 @@ class LMBN_n(nn.Module):
         par_new = par.permute(0, 2, 3, 1)
         torch.zeros([par.size()[0], 512, 2, 1])
         for i in range(par_new.size()[0]):
-            allparts = par_new[i, :, :, :].cpu().numpy()
+            allparts = par_new[i, :, :, :].cpu().detach().numpy()
             allparts = allparts.reshape((-1, 512))
             pixel_values = np.float32(allparts)
             criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
-            _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+            _, labels, (centers) = cv2.kmeans(pixel_values, 2, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
             print("centers", type(centers))
             print("hi: allparts.size:", allparts.size())
         if self.activation_map:
