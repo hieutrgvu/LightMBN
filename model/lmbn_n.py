@@ -80,7 +80,7 @@ class LMBN_n(nn.Module):
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
         par_new = par.permute(0, 2, 3, 1)
-        torch.zeros([par[0], 512, 2, 1])
+        torch.zeros([par.size()[0], 512, 2, 1])
         for i in range(par_new.size()[0]):
             allparts = par_new[i, :, :, :]
             allparts = allparts.reshape((-1, 512))
