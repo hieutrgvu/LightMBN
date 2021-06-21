@@ -85,6 +85,7 @@ class LMBN_n(nn.Module):
         #     x = self.batch_drop_block(x)
 
         x = self.backone(x)
+        parts=None
         if parts is None:
             x0 = x
             x1 = x
