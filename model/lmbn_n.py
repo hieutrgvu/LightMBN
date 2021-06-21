@@ -78,7 +78,7 @@ class LMBN_n(nn.Module):
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
         par_new = par.permute(0, 2, 3, 1)
-        print("hi: par_new.size:", parpar_new.size())
+        print("hi: par_new.size:", par_new.size())
         if self.activation_map:
             glo_ = glo
 
