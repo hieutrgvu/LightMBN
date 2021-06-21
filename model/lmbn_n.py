@@ -77,7 +77,7 @@ class LMBN_n(nn.Module):
         glo = self.global_branch(x)
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
-
+        print("hi: par.size:", par.size())
         if self.activation_map:
             glo_ = glo
 
