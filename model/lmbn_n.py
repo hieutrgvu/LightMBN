@@ -78,7 +78,7 @@ class LMBN_n(nn.Module):
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
         par_new = par.permute(0, 2, 3, 1)
-        for i in par_new.size()[0]:
+        for i in range(par_new.size()[0]):
             allparts = par_new[1, :, :, :]
             allparts = allparts.reshape((-1, 512))
             print("hi: allparts.size:", allparts.size())
