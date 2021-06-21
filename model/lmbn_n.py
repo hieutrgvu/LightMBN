@@ -88,7 +88,7 @@ class LMBN_n(nn.Module):
             criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
             _, labels, (centers) = cv2.kmeans(pixel_values, 2, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
             print("centers", type(centers))
-            print("hi: allparts.size:", allparts.size())
+            print("hi: centers.size:", centers.shape)
         if self.activation_map:
             glo_ = glo
 
