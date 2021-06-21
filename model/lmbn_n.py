@@ -87,6 +87,8 @@ class LMBN_n(nn.Module):
             pixel_values = np.float32(allparts)
             criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
             _, labels, (centers) = cv2.kmeans(pixel_values, 2, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+            centers = np.transpose(centers, (1, 0))
+            centers = np.expand_dims(centers, axis=2)
             print("centers", type(centers))
             print("hi: centers.size:", centers.shape)
         if self.activation_map:
