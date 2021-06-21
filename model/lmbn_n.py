@@ -80,7 +80,7 @@ class LMBN_n(nn.Module):
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
         par_new = par.permute(0, 2, 3, 1)
-        torch.zeros([par.size()[0], 512, 2, 1])
+        par01 = torch.zeros([par.size()[0], 512, 2, 1])
         for i in range(par_new.size()[0]):
             allparts = par_new[i, :, :, :].cpu().detach().numpy()
             allparts = allparts.reshape((-1, 512))
@@ -89,8 +89,9 @@ class LMBN_n(nn.Module):
             _, labels, (centers) = cv2.kmeans(pixel_values, 2, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
             centers = np.transpose(centers, (1, 0))
             centers = np.expand_dims(centers, axis=2)
-            print("centers", type(centers))
-            print("hi: centers.size:", centers.shape)
+            centers = torch.tensor(centers)
+            par01[i] = centers
+        par01 = par01.to(device='cuda')
         if self.activation_map:
             glo_ = glo
 
@@ -115,8 +116,10 @@ class LMBN_n(nn.Module):
         p_par = self.partial_pooling(par)  # shape:(batchsize, 512,2,1)
         cha = self.channel_pooling(cha)  # shape:(batchsize, 256,1,1)
 
-        p0 = p_par[:, :, 0:1, :]
-        p1 = p_par[:, :, 1:2, :]
+        # p0 = p_par[:, :, 0:1, :]
+        # p1 = p_par[:, :, 1:2, :]
+        p0 = par01[:, :, 0:1, :]
+        p1 = par01[:, :, 1:2, :]
 
         f_glo = self.reduction_0(glo)
         f_p0 = self.reduction_1(g_par)
