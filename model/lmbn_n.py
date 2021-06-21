@@ -5,6 +5,8 @@ from .osnet import osnet_x1_0, OSBlock
 from .attention import BatchDrop, BatchFeatureErase_Top, PAM_Module, CAM_Module, SE_Module, Dual_Module
 from .bnneck import BNNeck, BNNeck3
 from torch.nn import functional as F
+import cv2
+import numpy as np
 
 from torch.autograd import Variable
 
@@ -78,9 +80,14 @@ class LMBN_n(nn.Module):
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
         par_new = par.permute(0, 2, 3, 1)
+        torch.zeros([par[0], 512, 2, 1])
         for i in range(par_new.size()[0]):
             allparts = par_new[i, :, :, :]
             allparts = allparts.reshape((-1, 512))
+            pixel_values = np.float32(allparts)
+            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
+            _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+            print("centers", type(centers))
             print("hi: allparts.size:", allparts.size())
         if self.activation_map:
             glo_ = glo
