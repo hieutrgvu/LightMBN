@@ -39,6 +39,13 @@ class Engine():
         self.criterion_c2 = CenterLoss(num_classes=751, feat_dim=512)
         self.criterion_c3 = CenterLoss(num_classes=751, feat_dim=512)
 
+    def _compute_loss(self, criterion, outputs, targets):
+        if isinstance(outputs, (tuple, list)):
+            loss = DeepSupervision(criterion, outputs, targets)
+        else:
+            loss = criterion(outputs, targets)
+        return loss
+    
     def train(self):
 
         epoch = self.scheduler.last_epoch
