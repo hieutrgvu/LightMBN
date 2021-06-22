@@ -27,7 +27,7 @@ ckpt = utility.checkpoint(args)
 loader = data_v2.ImageDataManager(args)
 model = make_model(args, ckpt)
 optimzer = make_optimizer(args, model)
-loss = make_loss(args, ckpt) if not args.test_only else None
+# loss = make_loss(args, ckpt) if not args.test_only else None
 
 start = -1
 if args.load != '':
@@ -44,7 +44,7 @@ ckpt.write_log('[INFO] Model parameters: {com[0]} flops: {com[1]}'.format(com=co
                                                                           ))
 
 engine = engine_v3.Engine(args, model, optimzer,
-                          scheduler, loss, loader, ckpt)
+                          scheduler, None, loader, ckpt)
 # engine = engine.Engine(args, model, loss, loader, ckpt)
 
 n = start + 1

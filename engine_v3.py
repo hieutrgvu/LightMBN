@@ -2,6 +2,7 @@ import torch
 import numpy as np
 from utils.functions import evaluation
 from utils.re_ranking import re_ranking, re_ranking_gpu
+from losses import CrossEntropyLoss, TripletLoss, CenterLoss
 
 
 class Engine():
@@ -28,6 +29,16 @@ class Engine():
         self.ckpt.write_log(
             '[INFO] Starting from epoch {}'.format(self.scheduler.last_epoch + 1))
 
+        self.criterion_t = TripletLoss(margin=0.3)
+        self.criterion_x = CrossEntropyLoss(
+            num_classes=751,
+            use_gpu=self.use_gpu,
+            label_smooth=true
+        )
+        self.criterion_c1 = CenterLoss(num_classes=751, feat_dim=512)
+        self.criterion_c2 = CenterLoss(num_classes=751, feat_dim=512)
+        self.criterion_c3 = CenterLoss(num_classes=751, feat_dim=512)
+
     def train(self):
 
         epoch = self.scheduler.last_epoch
@@ -48,7 +59,25 @@ class Engine():
 
             self.optimizer.zero_grad()
             outputs = self.model(inputs)
-            loss = self.loss.compute(outputs, labels)
+            #loss = self.loss.compute(outputs, labels)
+            feat = outputs[-1]
+
+            loss_c1 = self._compute_loss(self.criterion_c1, fea[0], labels)
+            loss_c2 = self._compute_loss(self.criterion_c2, fea[1], labels)
+            loss_c3 = self._compute_loss(self.criterion_c3, fea[2], labels)
+
+            loss_t1 = self._compute_loss(self.criterion_t, fea[0], labels)
+            loss_t2 = self._compute_loss(self.criterion_t, fea[1], labels)
+            loss_t3 = self._compute_loss(self.criterion_t, fea[2], labels)
+
+            loss_x = self._compute_loss(self.criterion_x, outputs[0][0], labels)
+            for i in range(1, len(outputs[0])):
+                loss_x += self._compute_loss(self.criterion_x, outputs[0][i], labels)
+
+            loss1 = loss_x / len(outputs[0])
+            loss2 = (loss_t1 + loss_t2 + loss_t3) / 3.0
+            loss3 = (loss_c1 + loss_c2 + loss_c3) / 3.0
+            loss = loss1 + loss2 + 0.0005 * loss3
 
             loss.backward()
             self.optimizer.step()
