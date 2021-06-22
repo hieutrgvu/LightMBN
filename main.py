@@ -1,6 +1,5 @@
 import data_v1
 import data_v2
-from loss import make_loss
 from model import make_model
 from optim import make_optimizer, make_scheduler
 # import engine_v1
