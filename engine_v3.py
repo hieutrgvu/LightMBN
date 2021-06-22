@@ -95,7 +95,7 @@ class Engine():
                 end='' if batch + 1 != len(self.train_loader) else '\n')
 
         self.scheduler.step()
-        self.loss.end_log(len(self.train_loader))
+        # self.loss.end_log(len(self.train_loader))
         # self._save_checkpoint(epoch, 0., self.ckpt.dir, is_best=True)
 
     def test(self):
