@@ -88,10 +88,11 @@ class Engine():
             loss.backward()
             self.optimizer.step()
 
+            losses_t.update(loss2.item(), pids.size(0))
             self.ckpt.write_log('\r[INFO] [{}/{}]\t{}/{}\t{}'.format(
                 epoch + 1, self.args.epochs,
                 batch + 1, len(self.train_loader),
-                self.loss.display_loss(batch)),
+                'xxx',
                 end='' if batch + 1 != len(self.train_loader) else '\n')
 
         self.scheduler.step()
