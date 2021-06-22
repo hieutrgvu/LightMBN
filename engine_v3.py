@@ -32,8 +32,8 @@ class Engine():
         self.criterion_t = TripletLoss(margin=0.3)
         self.criterion_x = CrossEntropyLoss(
             num_classes=751,
-            use_gpu=self.use_gpu,
-            label_smooth=true
+            use_gpu=True,
+            label_smooth=True
         )
         self.criterion_c1 = CenterLoss(num_classes=751, feat_dim=512)
         self.criterion_c2 = CenterLoss(num_classes=751, feat_dim=512)
