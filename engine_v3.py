@@ -48,7 +48,6 @@ class Engine():
             self.ckpt.write_log(
                 '[INFO] Epoch: {}\tLearning rate: {:.2e}  '.format(epoch + 1, lr))
             self.lr = lr
-        self.loss.start_log()
         self.model.train()
 
         for batch, d in enumerate(self.train_loader):
