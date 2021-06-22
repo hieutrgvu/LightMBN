@@ -45,7 +45,7 @@ class Engine():
         else:
             loss = criterion(outputs, targets)
         return loss
-    
+
     def train(self):
 
         epoch = self.scheduler.last_epoch
@@ -66,7 +66,7 @@ class Engine():
             self.optimizer.zero_grad()
             outputs = self.model(inputs)
             #loss = self.loss.compute(outputs, labels)
-            feat = outputs[-1]
+            fea = outputs[-1]
 
             loss_c1 = self._compute_loss(self.criterion_c1, fea[0], labels)
             loss_c2 = self._compute_loss(self.criterion_c2, fea[1], labels)
