@@ -92,7 +92,7 @@ class Engine():
             self.ckpt.write_log('\r[INFO] [{}/{}]\t{}/{}\t{}'.format(
                 epoch + 1, self.args.epochs,
                 batch + 1, len(self.train_loader),
-                'xxx',
+                'xxx'),
                 end='' if batch + 1 != len(self.train_loader) else '\n')
 
         self.scheduler.step()
