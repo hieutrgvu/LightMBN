@@ -38,6 +38,8 @@ class LMBN_n(nn.Module):
 
         self.global_pooling = nn.AdaptiveMaxPool2d((1, 1))
         self.partial_pooling = nn.AdaptiveAvgPool2d((2, 1))
+        self.partial0_pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.partial1_pooling = nn.AdaptiveAvgPool2d((1, 1))
         self.channel_pooling = nn.AdaptiveAvgPool2d((1, 1))
 
         reduction = BNNeck3(512, args.num_classes,
@@ -71,16 +73,16 @@ class LMBN_n(nn.Module):
     def forward(self, x, masks=None):
         # if self.batch_drop_block is not None:
         #     x = self.batch_drop_block(x)
-        if masks is not None:
-            print("mahi: masks.size", masks.size())
-        print("mahi: x.size", x.size())
         x = self.backone(x)
 
         glo = self.global_branch(x)
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
 
-        print("mahi: par.size", par.size())
+        if masks is not None:
+            masks = masks.unsqueeze(1)
+            par0 = par * (masks == 0)
+            par1 = par * (masks == 1)
 
         if self.activation_map:
             glo_ = glo
@@ -89,11 +91,13 @@ class LMBN_n(nn.Module):
             glo_drop, glo = self.batch_drop_block(glo)
 
         if self.activation_map:
-
-            _, _, h_par, _ = par.size()
-
-            fmap_p0 = par[:, :, :h_par // 2, :]
-            fmap_p1 = par[:, :, h_par // 2:, :]
+            if masks is not None:
+                fmap_p0 = par0
+                fmap_p1 = par1
+            else:
+                _, _, h_par, _ = par.size()
+                fmap_p0 = par[:, :, :h_par // 2, :]
+                fmap_p1 = par[:, :, h_par // 2:, :]
             fmap_c0 = cha[:, :self.chs, :, :]
             fmap_c1 = cha[:, self.chs:, :, :]
             print('Generating activation maps...')
@@ -103,11 +107,15 @@ class LMBN_n(nn.Module):
         glo_drop = self.global_pooling(glo_drop)
         glo = self.channel_pooling(glo)  # shape:(batchsize, 512,1,1)
         g_par = self.global_pooling(par)  # shape:(batchsize, 512,1,1)
-        p_par = self.partial_pooling(par)  # shape:(batchsize, 512,2,1)
         cha = self.channel_pooling(cha)  # shape:(batchsize, 256,1,1)
 
-        p0 = p_par[:, :, 0:1, :]
-        p1 = p_par[:, :, 1:2, :]
+        if masks is not None:
+            p0 = self.partial0_pooling(par0)
+            p1 = self.partial1_pooling(par1)
+        else:
+            p_par = self.partial_pooling(par)  # shape:(batchsize, 512,2,1)
+            p0 = p_par[:, :, 0:1, :]
+            p1 = p_par[:, :, 1:2, :]
 
         f_glo = self.reduction_0(glo)
         f_p0 = self.reduction_1(g_par)
