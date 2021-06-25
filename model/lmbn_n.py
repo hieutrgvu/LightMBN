@@ -71,8 +71,8 @@ class LMBN_n(nn.Module):
     def forward(self, x, masks=None):
         # if self.batch_drop_block is not None:
         #     x = self.batch_drop_block(x)
-        if mask is not None:
-            print("mahi: mask.size", masks.size())
+        if masks is not None:
+            print("mahi: masks.size", masks.size())
         print("mahi: x.size", x.size())
         x = self.backone(x)
 
