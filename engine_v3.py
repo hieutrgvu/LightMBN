@@ -45,7 +45,7 @@ class Engine():
 
             inputs = inputs.to(self.device)
             labels = labels.to(self.device)
-            masks = mask.to(self.device)
+            masks = masks.to(self.device)
 
             self.optimizer.zero_grad()
             outputs = self.model(inputs, masks)
