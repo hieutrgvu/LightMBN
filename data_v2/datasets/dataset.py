@@ -247,7 +247,7 @@ class ImageDataset(Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        mask_dir, mask_file = os.path.split(image_path)
+        mask_dir, mask_file = os.path.split(img_path)
         mask_path = mask_dir + "_mask/" + mask_file.split(".")[0]
         mask = torch.load(mask_path)
         return img, pid, camid, img_path, mask
