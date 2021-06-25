@@ -41,13 +41,14 @@ class Engine():
         self.model.train()
 
         for batch, d in enumerate(self.train_loader):
-            inputs, labels = self._parse_data_for_train(d)
+            inputs, labels, masks = self._parse_data_for_train(d)
 
             inputs = inputs.to(self.device)
             labels = labels.to(self.device)
+            masks = mask.to(self.device)
 
             self.optimizer.zero_grad()
-            outputs = self.model(inputs)
+            outputs = self.model(inputs, masks)
             loss = self.loss.compute(outputs, labels)
 
             loss.backward()
@@ -164,13 +165,15 @@ class Engine():
     def _parse_data_for_train(self, data):
         imgs = data[0]
         pids = data[1]
-        return imgs, pids
+        masks = data[4]
+        return imgs, pids, masks
 
     def _parse_data_for_eval(self, data):
         imgs = data[0]
         pids = data[1]
         camids = data[2]
-        return imgs, pids, camids
+        masks = data[4]
+        return imgs, pids, camids, masks
 
     def _save_checkpoint(self, epoch, rank1, save_dir, is_best=False):
         self.ckpt.save_checkpoint(

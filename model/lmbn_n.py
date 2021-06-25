@@ -68,15 +68,18 @@ class LMBN_n(nn.Module):
 
         self.activation_map = args.activation_map
 
-    def forward(self, x):
+    def forward(self, x, masks):
         # if self.batch_drop_block is not None:
         #     x = self.batch_drop_block(x)
-
+        print("mahi: mask.size", masks.size())
+        print("mahi: x.size", x.size())
         x = self.backone(x)
 
         glo = self.global_branch(x)
         par = self.partial_branch(x)
         cha = self.channel_branch(x)
+
+        print("mahi: par.size", par.size())
 
         if self.activation_map:
             glo_ = glo
