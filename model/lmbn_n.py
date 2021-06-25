@@ -96,6 +96,7 @@ class LMBN_n(nn.Module):
 
         glo = self.global_branch(x)
         par = self.partial_branch(x)
+        print("ma: type(par)", type(par))
         par0 = self.partial_branch_p(x0)
         par1 = self.partial_branch_p(x1)
         cha = self.channel_branch(x)
