@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="525067f4-593e-4cdb-8982-70fa227849b9" name="Default Changelist" comment="" />
+    <list default="true" id="525067f4-593e-4cdb-8982-70fa227849b9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/lmbn_n.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/lmbn_n.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,6 +22,7 @@
     </file-type-list>
   </component>
   <component name="ProjectId" id="1uGCepjZ5tknmFKzBhb7kAEC3QL" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -44,7 +48,8 @@
       <option name="presentableId" value="Default" />
       <updated>1624282636289</updated>
       <workItem from="1624282637617" duration="88000" />
-      <workItem from="1624282728805" duration="16317000" />
+      <workItem from="1624282728805" duration="19134000" />
+      <workItem from="1624610796858" duration="249000" />
     </task>
     <servers />
   </component>
