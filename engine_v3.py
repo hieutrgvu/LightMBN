@@ -126,6 +126,7 @@ class Engine():
             inputs, pid, camid, masks = self._parse_data_for_eval(d)
             input_img = inputs.to(self.device)
             masks = masks.to(self.device)
+            print("mahi: masks.size():", masks.size())
             outputs = self.model(input_img, masks)
 
             f1 = outputs.data.cpu()
