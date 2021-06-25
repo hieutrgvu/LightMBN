@@ -123,9 +123,10 @@ class Engine():
         pids, camids = [], []
 
         for d in loader:
-            inputs, pid, camid = self._parse_data_for_eval(d)
+            inputs, pid, camid, masks = self._parse_data_for_eval(d)
             input_img = inputs.to(self.device)
-            outputs = self.model(input_img)
+            masks = masks.to(self.device)
+            outputs = self.model(input_img, masks)
 
             f1 = outputs.data.cpu()
             # flip
