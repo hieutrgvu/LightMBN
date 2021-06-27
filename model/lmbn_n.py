@@ -149,7 +149,10 @@ class LMBN_n(nn.Module):
 
         if not self.training:
             if masks is not None:
+                print("mahi: test1")
                 return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_p3[0], f_p4[0], f_c0[0], f_c1[0]], dim=2)
+
+            print("mahi: test2")
             return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
             # return torch.stack([f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
 
