@@ -129,8 +129,9 @@ class LMBN_n(nn.Module):
         f_p0 = self.reduction_1(g_par)
         f_p1 = self.reduction_2(p0)
         f_p2 = self.reduction_3(p1)
-        f_p3 = self.reduction_5(p2)
-        f_p4 = self.reduction_6(p3)
+        if masks is not None:
+            f_p3 = self.reduction_5(p2)
+            f_p4 = self.reduction_6(p3)
         f_glo_drop = self.reduction_4(glo_drop)
 
         ################
@@ -147,11 +148,14 @@ class LMBN_n(nn.Module):
         fea = [f_glo[-1], f_glo_drop[-1], f_p0[-1]]
 
         if not self.training:
-
-            return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_p3[0], f_p4[0], f_c0[0], f_c1[0]], dim=2)
+            if masks is not None:
+                return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_p3[0], f_p4[0], f_c0[0], f_c1[0]], dim=2)
+            return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
             # return torch.stack([f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
 
-        return [f_glo[1], f_glo_drop[1], f_p0[1], f_p1[1], f_p2[1], f_p3[1], f_p4[1], f_c0[1], f_c1[1]], fea
+        if masks is not None:
+            return [f_glo[1], f_glo_drop[1], f_p0[1], f_p1[1], f_p2[1], f_p3[1], f_p4[1], f_c0[1], f_c1[1]], fea
+        return [f_glo[1], f_glo_drop[1], f_p0[1], f_p1[1], f_p2[1], f_c0[1], f_c1[1]], fea
 
     def weights_init_kaiming(self, m):
         classname = m.__class__.__name__
