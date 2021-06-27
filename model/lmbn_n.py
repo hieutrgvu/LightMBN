@@ -40,6 +40,8 @@ class LMBN_n(nn.Module):
         self.partial_pooling = nn.AdaptiveAvgPool2d((2, 1))
         self.partial0_pooling = nn.AdaptiveAvgPool2d((1, 1))
         self.partial1_pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.partial2_pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.partial3_pooling = nn.AdaptiveAvgPool2d((1, 1))
         self.channel_pooling = nn.AdaptiveAvgPool2d((1, 1))
 
         reduction = BNNeck3(512, args.num_classes,
@@ -50,6 +52,8 @@ class LMBN_n(nn.Module):
         self.reduction_2 = copy.deepcopy(reduction)
         self.reduction_3 = copy.deepcopy(reduction)
         self.reduction_4 = copy.deepcopy(reduction)
+        self.reduction_5 = copy.deepcopy(reduction)
+        self.reduction_6 = copy.deepcopy(reduction)
 
         self.shared = nn.Sequential(nn.Conv2d(
             self.chs, args.feats, 1, bias=False), nn.BatchNorm2d(args.feats), nn.ReLU(True))
@@ -83,6 +87,8 @@ class LMBN_n(nn.Module):
             masks = masks.unsqueeze(1)
             par0 = par * (masks == 0)
             par1 = par * (masks == 1)
+            par2 = par * (masks == 2)
+            par3 = par * (masks == 3)
 
         if self.activation_map:
             glo_ = glo
@@ -112,6 +118,8 @@ class LMBN_n(nn.Module):
         if masks is not None:
             p0 = self.partial0_pooling(par0)
             p1 = self.partial1_pooling(par1)
+            p2 = self.partial2_pooling(par2)
+            p3 = self.partial3_pooling(par3)
         else:
             p_par = self.partial_pooling(par)  # shape:(batchsize, 512,2,1)
             p0 = p_par[:, :, 0:1, :]
@@ -121,6 +129,8 @@ class LMBN_n(nn.Module):
         f_p0 = self.reduction_1(g_par)
         f_p1 = self.reduction_2(p0)
         f_p2 = self.reduction_3(p1)
+        f_p3 = self.reduction_5(p2)
+        f_p4 = self.reduction_6(p3)
         f_glo_drop = self.reduction_4(glo_drop)
 
         ################
@@ -138,10 +148,10 @@ class LMBN_n(nn.Module):
 
         if not self.training:
 
-            return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
+            return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_p3[0], f_p4[0], f_c0[0], f_c1[0]], dim=2)
             # return torch.stack([f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
 
-        return [f_glo[1], f_glo_drop[1], f_p0[1], f_p1[1], f_p2[1], f_c0[1], f_c1[1]], fea
+        return [f_glo[1], f_glo_drop[1], f_p0[1], f_p1[1], f_p2[1], f_p3[1], f_p4[1], f_c0[1], f_c1[1]], fea
 
     def weights_init_kaiming(self, m):
         classname = m.__class__.__name__
