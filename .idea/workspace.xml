@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="525067f4-593e-4cdb-8982-70fa227849b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_v2/datasets/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_v2/datasets/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/lmbn_n.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/lmbn_n.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
