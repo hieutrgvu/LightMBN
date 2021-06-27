@@ -154,12 +154,8 @@ class LMBN_n(nn.Module):
             return torch.stack([f_glo[0], f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
             # return torch.stack([f_glo_drop[0], f_p0[0], f_p1[0], f_p2[0], f_c0[0], f_c1[0]], dim=2)
 
-        print("mahi: test0")
         if masks is not None:
-            print("mahi: test1")
             return [f_glo[1], f_glo_drop[1], f_p0[1], f_p1[1], f_p2[1], f_p3[1], f_p4[1], f_c0[1], f_c1[1]], fea
-
-        print("mahi: test2")
         return [f_glo[1], f_glo_drop[1], f_p0[1], f_p1[1], f_p2[1], f_c0[1], f_c1[1]], fea
 
     def weights_init_kaiming(self, m):
