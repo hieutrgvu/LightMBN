@@ -124,15 +124,18 @@ class Engine():
         for d in loader:
             inputs, pid, camid, masks = self._parse_data_for_eval(d)
             input_img = inputs.to(self.device)
-            masks = masks.to(self.device)
-            outputs = self.model(input_img, masks)
+            masks_img = masks.to(self.device)
+            outputs = self.model(input_img, masks_img)
 
             f1 = outputs.data.cpu()
             # flip
             inputs = inputs.index_select(
                 3, torch.arange(inputs.size(3) - 1, -1, -1))
+            masks = masks.index_select(
+                3, torch.arange(masks.size(3) - 1, -1, -1))
             input_img = inputs.to(self.device)
-            outputs = self.model(input_img)
+            masks_img = masks.to(self.device)
+            outputs = self.model(input_img, masks_img)
             f2 = outputs.data.cpu()
 
             ff = f1 + f2
