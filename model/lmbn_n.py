@@ -75,7 +75,6 @@ class LMBN_n(nn.Module):
         self.activation_map = args.activation_map
 
     def forward(self, x, masks=None):
-        print("mahi: masks.size:", masks.size())
         # if self.batch_drop_block is not None:
         #     x = self.batch_drop_block(x)
         x = self.backone(x)
