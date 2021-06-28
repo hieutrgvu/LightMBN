@@ -132,7 +132,7 @@ class Engine():
             inputs = inputs.index_select(
                 3, torch.arange(inputs.size(3) - 1, -1, -1))
             masks = masks.index_select(
-                3, torch.arange(masks.size(3) - 1, -1, -1))
+                2, torch.arange(masks.size(2) - 1, -1, -1))
             input_img = inputs.to(self.device)
             masks_img = masks.to(self.device)
             outputs = self.model(input_img, masks_img)
